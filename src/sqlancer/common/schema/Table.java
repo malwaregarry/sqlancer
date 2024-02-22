@@ -3,44 +3,41 @@ package sqlancer.common.schema;
 import java.util.List;
 import java.util.function.Predicate;
 
-public interface Table<U> extends Comparable<Table<U>> {
+public interface Table<C extends TableColumn<?>> extends Comparable<Table<C>> {
 
     String getName();
 
-    List<TableIndex> getIndexes();
+    List<? extends TableIndex> getIndexes();
 
-    List<TableColumn<U>> getColumns();
+    List<C> getColumns();
 
     String getColumnsAsString();
 
-    TableColumn<U> getRandomColumn();
+    C getRandomColumn();
 
-    TableColumn<U> getRandomColumnOrBailout(Predicate<TableColumn<U>> predicate);
+    C getRandomColumnOrBailout(Predicate<C> predicate);
 
     boolean hasIndexes();
 
     TableIndex getRandomIndex();
 
-    List<TableColumn<U>> getRandomNonEmptyColumnSubset();
+    List<C> getRandomNonEmptyColumnSubset();
 
-    List<TableColumn<U>> getRandomNonEmptyColumnSubset(int size);
+    List<C> getRandomNonEmptyColumnSubset(int size);
 
     boolean isView();
 
     String getFreeColumnName();
 
-    void recomputeCount() ;
+    void recomputeCount();
 
-    String getFullyQualifiedColumnName(TableColumn<U> column);
-
-    long getNrRows(G globalState);
+    // long getNrRows(G globalState);
 
     @Override
     String toString();
 
     @Override
-    default int compareTo(Table<U> o) {
+    default int compareTo(Table o) {
         return o.getName().compareTo(getName());
     }
-
 }

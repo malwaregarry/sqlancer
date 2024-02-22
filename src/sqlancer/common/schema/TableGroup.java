@@ -3,12 +3,12 @@ package sqlancer.common.schema;
 import java.util.List;
 import java.util.function.Function;
 
-public interface TableGroup<U> {
+public interface TableGroup<T extends Table<?>, C extends TableColumn<?>> {
     String tableNamesAsString();
 
-    List<Table<U>> getTables();
+    List<T> getTables();
 
-    List<TableColumn<U>> getColumns();
+    List<C> getColumns();
 
-    String columnNamesAsString(Function<TableColumn<U>, String> function);
+    String columnNamesAsString(Function<C, String> function);
 }
