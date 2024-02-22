@@ -5,9 +5,9 @@ public interface TableColumn<U> extends Comparable<TableColumn<U>> {
 
     String getFullQualifiedName();
 
-    void setTable(Table<U> table);
+    void setTable(Table<?> table);
 
-    Table<U> getTable();
+    Table<?> getTable();
 
     U getType();
 
@@ -21,7 +21,7 @@ public interface TableColumn<U> extends Comparable<TableColumn<U>> {
     int hashCode();
 
     @Override
-    default int compareTo(TableColumn<U> o) {
+    default int compareTo(TableColumn o) {
         return getName().compareTo(o.getName());
     }
 

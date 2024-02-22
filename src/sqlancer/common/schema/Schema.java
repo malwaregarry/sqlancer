@@ -4,32 +4,32 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface Schema<U> {
+public interface Schema<T extends Table<?>> {
     String toString();
 
-    Table<U> getRandomTable();
+    T getRandomTable();
 
-    Table<U> getRandomTableOrBailout();
+    T getRandomTableOrBailout();
 
-    Table<U> getRandomTable(Predicate<Table<U>> predicate);
+    T getRandomTable(Predicate<T> predicate);
 
-    Table<U> getRandomTableOrBailout(Function<Table<U>, Boolean> f);
+    T getRandomTableOrBailout(Function<T, Boolean> f);
 
-    List<Table<U>> getDatabaseTables();
+    List<T> getDatabaseTables();
 
-    List<Table<U>> getTables(Predicate<Table<U>> predicate);
+    List<T> getTables(Predicate<T> predicate);
 
-    List<Table<U>> getDatabaseTablesRandomSubsetNotEmpty();
+    List<T> getDatabaseTablesRandomSubsetNotEmpty();
 
-    Table<U> getDatabaseTable(String name);
+    Table getDatabaseTable(String name);
 
-    List<Table<U>> getViews();
+    List<T> getViews();
 
-    List<Table<U>> getDatabaseTablesWithoutViews();
+    List<T> getDatabaseTablesWithoutViews();
 
-    Table<U> getRandomViewOrBailout();
+    T getRandomViewOrBailout();
 
-    Table<U> getRandomTableNoViewOrBailout();
+    T getRandomTableNoViewOrBailout();
 
     String getFreeIndexName();
 
@@ -37,9 +37,8 @@ public interface Schema<U> {
 
     String getFreeViewName();
 
-    boolean containsTableWithZeroRows(G globalState);
+    // boolean containsTableWithZeroRows(G globalState);
 
-    TableGroup<U> getRandomTableNonEmptyTables();
-
+    // TableGroup getRandomTableNonEmptyTables();
 
 }
