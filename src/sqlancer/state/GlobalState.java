@@ -5,7 +5,7 @@ import sqlancer.SQLGlobalState;
 import sqlancer.common.schema.AbstractSchema;
 import sqlancer.common.schema.Schema;
 
-public interface GlobalState<O extends DBMSOptions, U, C extends SQLancerDBConnection> {
+public interface GlobalState<O extends DBMSOptions, S extends Schema<?>, C extends SQLancerDBConnection> {
 
     void setConnection(C con);
 
@@ -35,7 +35,7 @@ public interface GlobalState<O extends DBMSOptions, U, C extends SQLancerDBConne
 
     void setDatabaseName(String databaseName);
 
-    <S extends Schema<U>> S getSchema();
+    S getSchema();
     void updateSchema() throws Exception;
 
 //    protected void setSchema(S schema);
