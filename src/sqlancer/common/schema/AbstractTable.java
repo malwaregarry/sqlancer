@@ -10,7 +10,7 @@ import sqlancer.IgnoreMeException;
 import sqlancer.Randomly;
 
 public abstract class AbstractTable<C extends AbstractTableColumn<?, ?>, I extends TableIndex, G extends GlobalState<?, ?, ?>>
-        implements Comparable<AbstractTable<?, ?, ?>> {
+        implements Table<C>, Comparable<Table<C>> {
 
     protected static final int NO_ROW_COUNT_AVAILABLE = -1;
     protected final String name;
@@ -31,7 +31,7 @@ public abstract class AbstractTable<C extends AbstractTableColumn<?, ?>, I exten
     }
 
     @Override
-    public int compareTo(AbstractTable<?, ?, ?> o) {
+    public int compareTo(Table o) {
         return o.getName().compareTo(getName());
     }
 

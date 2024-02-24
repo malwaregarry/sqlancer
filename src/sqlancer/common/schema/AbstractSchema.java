@@ -10,7 +10,7 @@ import sqlancer.GlobalState;
 import sqlancer.IgnoreMeException;
 import sqlancer.Randomly;
 
-public class AbstractSchema<G extends GlobalState<?, ?, ?>, A extends AbstractTable<?, ?, G>> {
+public class AbstractSchema<G extends GlobalState<?, ?, ?>, A extends AbstractTable<?, ?, G>> implements Schema<A> {
 
     private final List<A> databaseTables;
 
@@ -142,10 +142,5 @@ public class AbstractSchema<G extends GlobalState<?, ?, ?>, A extends AbstractTa
     public boolean containsTableWithZeroRows(G globalState) {
         return databaseTables.stream().anyMatch(t -> t.getNrRows(globalState) == 0);
     }
-
-    public <C extends AbstractTableColumn<?, ?>> AbstractTables<? extends A, C> getRandomTableNonEmptyTables() {
-        throw new IgnoreMeException();
-    }
-
 
 }
