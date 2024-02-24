@@ -14,12 +14,7 @@ import sqlancer.IgnoreMeException;
 import sqlancer.Randomly;
 import sqlancer.SQLConnection;
 import sqlancer.common.DBMSCommon;
-import sqlancer.common.schema.AbstractRelationalTable;
-import sqlancer.common.schema.AbstractRowValue;
-import sqlancer.common.schema.AbstractSchema;
-import sqlancer.common.schema.AbstractTableColumn;
-import sqlancer.common.schema.AbstractTables;
-import sqlancer.common.schema.TableIndex;
+import sqlancer.common.schema.*;
 import sqlancer.doris.DorisProvider.DorisGlobalState;
 import sqlancer.doris.DorisSchema.DorisTable;
 import sqlancer.doris.ast.DorisConstant;
@@ -306,7 +301,7 @@ public class DorisSchema extends AbstractSchema<DorisGlobalState, DorisTable> {
         }
 
         @Override
-        public int compareTo(AbstractTableColumn<DorisTable, DorisCompositeDataType> o) {
+        public int compareTo(TableColumn o) {
             // To sort columns
             DorisColumn other = (DorisColumn) o;
             if (isKey != other.isKey) {
