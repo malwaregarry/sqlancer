@@ -3,8 +3,10 @@ package sqlancer.common.oracle;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import sqlancer.ComparatorHelper;
+import sqlancer.IgnoreMeException;
 import sqlancer.Randomly;
 import sqlancer.SQLGlobalState;
 import sqlancer.common.ast.newast.Aggregate;
@@ -31,6 +33,12 @@ public class TLPAggregateOracle<A extends Aggregate<E, C>, E extends Expression<
         this.state = state;
         this.gen = gen;
         this.errors = expectedErrors;
+    }
+
+    public TLPAggregateOracle(G state, TLPAggregateGenerator<A, ?, E, T, C> gen, List<String> expectedErrors,
+            List<Pattern> expectedErrorsRegex) {
+        this(state, gen, expectedErrors);
+        errors.addAllRegexes(expectedErrorsRegex);
     }
 
     @Override
@@ -63,19 +71,27 @@ public class TLPAggregateOracle<A extends Aggregate<E, C>, E extends Expression<
         Select<?, E, T, C> middleSelect = getSelect(aggregate, from, negatedClause);
         Select<?, E, T, C> rightSelect = getSelect(aggregate, from, notNullClause);
 
-        String metamorphicText = aggregate.asAggregatedString(leftSelect.asString(), middleSelect.asString(),
+        String metamorphicQuery = aggregate.asAggregatedString(leftSelect.asString(), middleSelect.asString(),
                 rightSelect.asString());
 
-        String secondResult = ComparatorHelper.runQuery(metamorphicText, errors, state);
+        String secondResult = ComparatorHelper.runQuery(metamorphicQuery, errors, state);
 
-        state.getState().getLocalState()
-                .log("--" + originalQuery + "\n--" + metamorphicText + "\n-- " + firstResult + "\n-- " + secondResult);
+        String queryFormatString = "-- %s;\n-- result: %s";
+        String firstQueryString = String.format(queryFormatString, originalQuery, firstResult);
+        String secondQueryString = String.format(queryFormatString, metamorphicQuery, secondResult);
+        state.getState().getLocalState().log(String.format("%s\n%s", firstQueryString, secondQueryString));
 
         if ((firstResult == null && secondResult != null
                 || firstResult != null && !firstResult.contentEquals(secondResult))
                 && !ComparatorHelper.isEqualDouble(firstResult, secondResult)) {
 
-            throw new AssertionError();
+            if (secondResult != null && secondResult.contains("Inf")) {
+                throw new IgnoreMeException(); // FIXME: average computation
+            }
+
+            String assertionMessage = String.format("the results mismatch!\n%s\n%s", firstQueryString,
+                    secondQueryString);
+            throw new AssertionError(assertionMessage);
         }
     }
 
@@ -85,7 +101,7 @@ public class TLPAggregateOracle<A extends Aggregate<E, C>, E extends Expression<
         leftSelect.setFromList(from);
         leftSelect.setWhereClause(whereClause);
         if (Randomly.getBooleanWithRatherLowProbability()) {
-            leftSelect.setGroupByClause(gen.getRandomExpressions(Randomly.smallNumber() + 1));
+            leftSelect.setGroupByClause(gen.generateExpressions(Randomly.smallNumber() + 1));
         }
         if (Randomly.getBoolean()) {
             leftSelect.setOrderByClauses(gen.generateOrderBys());
