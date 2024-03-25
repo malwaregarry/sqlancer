@@ -755,4 +755,14 @@ public class PostgresExpressionGenerator implements ExpressionGenerator<Postgres
         }
         return args;
     }
+
+    @Override
+    public List<PostgresExpression> generateGroupBys() {
+        return generateExpressions(Randomly.smallNumber() + 1);
+    }
+
+    @Override
+    public String combineQueryStrings(String... queryStrings) {
+        return String.join(" UNION ALL ", queryStrings);
+    }
 }

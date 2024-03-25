@@ -26,12 +26,15 @@ public class TLPHavingOracle<J extends Join<E, T, C>, E extends Expression<C>, S
     private TLPHavingGenerator<J, E, T, C> gen;
     private final ExpectedErrors errors;
 
+    private final boolean hasIndependentGroupBys;
     private String generatedQueryString;
 
-    public TLPHavingOracle(G state, TLPHavingGenerator<J, E, T, C> gen, ExpectedErrors expectedErrors) {
+    public TLPHavingOracle(G state, TLPHavingGenerator<J, E, T, C> gen, ExpectedErrors expectedErrors,
+            boolean hasIndependentGroupBys) {
         this.state = state;
         this.gen = gen;
         this.errors = expectedErrors;
+        this.hasIndependentGroupBys = hasIndependentGroupBys;
     }
 
     @Override
@@ -48,8 +51,17 @@ public class TLPHavingOracle<J extends Join<E, T, C>, E extends Expression<C>, S
         select.setFetchColumns(fetchColumns);
         select.setJoinClauses(gen.getRandomJoinClauses());
         select.setFromList(gen.getTableRefs());
-        select.setGroupByClause(fetchColumns);
+
+        if (hasIndependentGroupBys) {
+            select.setGroupByClause(gen.generateGroupBys());
+        } else {
+            select.setGroupByClause(fetchColumns);
+        }
+
         select.setHavingClause(null);
+        if (Randomly.getBoolean()) {
+            select.setWhereClause(gen.generateBooleanExpression());
+        }
 
         String originalQueryString = select.asString();
         generatedQueryString = originalQueryString;
@@ -68,8 +80,7 @@ public class TLPHavingOracle<J extends Join<E, T, C>, E extends Expression<C>, S
         String secondQueryString = select.asString();
         select.setHavingClause(gen.isNull(predicate));
         String thirdQueryString = select.asString();
-        String combinedString = TestOracleUtils.combineQueryStrings(" UNION ALL ", firstQueryString, secondQueryString,
-                thirdQueryString);
+        String combinedString = gen.combineQueryStrings(firstQueryString, secondQueryString, thirdQueryString);
 
         if (combinedString.contains("EXIST")) {
             throw new IgnoreMeException();
