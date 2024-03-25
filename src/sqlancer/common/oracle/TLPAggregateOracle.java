@@ -3,7 +3,6 @@ package sqlancer.common.oracle;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import sqlancer.ComparatorHelper;
 import sqlancer.IgnoreMeException;
@@ -33,12 +32,6 @@ public class TLPAggregateOracle<A extends Aggregate<E, C>, E extends Expression<
         this.state = state;
         this.gen = gen;
         this.errors = expectedErrors;
-    }
-
-    public TLPAggregateOracle(G state, TLPAggregateGenerator<A, ?, E, T, C> gen, List<String> expectedErrors,
-            List<Pattern> expectedErrorsRegex) {
-        this(state, gen, expectedErrors);
-        errors.addAllRegexes(expectedErrorsRegex);
     }
 
     @Override

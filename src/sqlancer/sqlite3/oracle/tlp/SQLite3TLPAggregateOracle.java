@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import sqlancer.common.oracle.TLPAggregateOracle;
 import sqlancer.common.oracle.TestOracle;
+import sqlancer.common.query.ExpectedErrors;
 import sqlancer.sqlite3.SQLite3Errors;
 import sqlancer.sqlite3.SQLite3GlobalState;
 import sqlancer.sqlite3.ast.SQLite3Aggregate;
