@@ -10,7 +10,7 @@ import sqlancer.GlobalState;
 import sqlancer.IgnoreMeException;
 import sqlancer.Randomly;
 
-public class AbstractSchema<G extends GlobalState<?, ?, ?>, A extends AbstractTable<?, ?, G>> {
+public class AbstractSchema<G extends GlobalState<?, ?, ?>, A extends AbstractTable<?, ?, G>> implements Schema<A> {
 
     private final List<A> databaseTables;
 

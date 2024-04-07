@@ -1,6 +1,7 @@
 package sqlancer.common.schema;
 
-public class AbstractTableColumn<T extends AbstractTable<?, ?, ?>, U> implements Comparable<AbstractTableColumn<T, U>> {
+public class AbstractTableColumn<T extends AbstractTable<?, ?, ?>, U>
+        implements TableColumn<U>, Comparable<TableColumn<U>> {
 
     private final String name;
     private final U type;
@@ -26,6 +27,11 @@ public class AbstractTableColumn<T extends AbstractTable<?, ?, ?>, U> implements
 
     public void setTable(T table) {
         this.table = table;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setTable(Table<?> table) {
+        this.table = (T) table;
     }
 
     public T getTable() {
@@ -65,7 +71,7 @@ public class AbstractTableColumn<T extends AbstractTable<?, ?, ?>, U> implements
     }
 
     @Override
-    public int compareTo(AbstractTableColumn<T, U> o) {
+    public int compareTo(TableColumn o) {
         if (o.getTable().equals(this.getTable())) {
             return getName().compareTo(o.getName());
         } else {
