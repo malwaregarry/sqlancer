@@ -270,6 +270,10 @@ public class PostgresProvider extends SQLProviderAdapter<PostgresGlobalState, Po
         globalState.getState().logStatement("DROP DATABASE IF EXISTS " + databaseName);
         createDatabaseCommand = getCreateDatabaseCommand(globalState);
         globalState.getState().logStatement(createDatabaseCommand);
+        globalState.getState().logStatement("CREATE EXTENSION IF NOT EXISTS citus;");
+        try (Statement s = con.createStatement()) {
+            s.execute("CREATE EXTENSION IF NOT EXISTS citus;");
+        }
         try (Statement s = con.createStatement()) {
             s.execute("DROP DATABASE IF EXISTS " + databaseName);
         }
