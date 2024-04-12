@@ -2,6 +2,7 @@ package sqlancer.stonedb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import sqlancer.common.query.ExpectedErrors;
 import sqlancer.stonedb.StoneDBProvider.StoneDBGlobalState;
@@ -53,11 +54,19 @@ public final class StoneDBErrors {
             // 16:47:04'
             errors.add("Incorrect TIMESTAMP value: ");
         }
+        return errors;
+    }
+
+    public static List<Pattern> getExpectedExpressionRegexErrors() {
+        ArrayList<Pattern> errors = new ArrayList<>();
+
+        errors.add(Pattern.compile("You have an error in your SQL syntax.*\\'.*'"));
 
         return errors;
     }
 
     public static void addExpectedExpressionErrors(StoneDBGlobalState globalState, ExpectedErrors errors) {
         errors.addAll(getExpectedExpressionErrors(globalState));
+        errors.addAllRegexes(getExpectedExpressionRegexErrors());
     }
 }
