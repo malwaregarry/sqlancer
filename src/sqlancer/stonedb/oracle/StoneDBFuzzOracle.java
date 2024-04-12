@@ -50,7 +50,7 @@ public class StoneDBFuzzOracle implements TestOracle<StoneDBGlobalState> {
         StoneDBSelect select = new StoneDBSelect();
         select.setFetchColumns(
                 Randomly.fromOptions(List.of(new ColumnReferenceNode<>(new StoneDBColumn("*", null, false, false, 0))),
-                        allColumns, Randomly.subset(allColumns)));
+                        allColumns, Randomly.nonEmptySubset(allColumns)));
         select.setFromList(new ArrayList<>(tableList));
         select.setJoinList(joins);
         select.setWhereClause(randomWhereCondition);
