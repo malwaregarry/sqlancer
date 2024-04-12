@@ -94,7 +94,7 @@ public class StoneDBTableInsertGenerator extends AbstractInsertGenerator<StoneDB
     }
 
     private void appendOnDuplicateUpdate() {
-        sb.append("on duplicate key update ");
+        sb.append(" on duplicate key update ");
         StoneDBColumn randomColumn = table.getRandomColumn();
         sb.append(randomColumn.getName());
         sb.append("=");
