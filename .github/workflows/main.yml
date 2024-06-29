@@ -89,6 +89,7 @@ jobs:
           psql -c "CREATE EXTENSION citus;" -p 9702 -U $USER -d test
           psql -c "SELECT * from citus_add_node('localhost', 9701);" -p 9700 -U $USER -d test
           psql -c "SELECT * from citus_add_node('localhost', 9702);" -p 9700 -U $USER -d test
+          sleep 30
       - name: Run Tests
         run: CITUS_AVAILABLE=true mvn -Dtest=TestCitus test
 
