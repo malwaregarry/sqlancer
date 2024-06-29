@@ -63,7 +63,7 @@ jobs:
         run: |
           echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
           curl https://install.citusdata.com/community/deb.sh | sudo bash
-          sudo apt-get -y install  postgresql-15-citus-11.1
+          sudo apt-get -y install  postgresql-15-citus-11.3
           sudo chown -R $USER:$USER /var/run/postgresql
           export PATH=/usr/lib/postgresql/15/bin:$PATH
           cd ~
@@ -89,6 +89,7 @@ jobs:
           psql -c "CREATE EXTENSION citus;" -p 9702 -U $USER -d test
           psql -c "SELECT * from citus_add_node('localhost', 9701);" -p 9700 -U $USER -d test
           psql -c "SELECT * from citus_add_node('localhost', 9702);" -p 9700 -U $USER -d test
+          sleep 30
       - name: Run Tests
         run: CITUS_AVAILABLE=true mvn -Dtest=TestCitus test
 
