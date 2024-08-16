@@ -15,7 +15,7 @@ public class TestCitus {
         boolean citusIsAvailable = citusAvailable != null && citusAvailable.equalsIgnoreCase("true");
         assumeTrue(citusIsAvailable);
         assertEquals(0,
-                Main.executeMain(new String[] { "--random-seed", "0", "--timeout-seconds", TestConfig.SECONDS,
+                Main.executeMain(new String[] { "--print-statements", "true", "--random-seed", "0", "--timeout-seconds", TestConfig.SECONDS,
                         "--num-threads", "1", "--num-queries", TestConfig.NUM_QUERIES, "citus", "--connection-url",
                         "postgresql://localhost:9700/test", "--test-collations", "false" }));
     }
